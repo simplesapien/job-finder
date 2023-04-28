@@ -1,0 +1,77 @@
+const puppeteer = require("puppeteer");
+
+async function craigslist() {
+  // Launch a headless browser using Puppeteer
+  const browser = await puppeteer.launch({
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
+  // Create a new page in the headless browser
+  const page = await browser.newPage();
+
+  // Navigate to the target URL and wait until the network is idle
+  await page.goto("https://vancouver.craigslist.org/search/fbh", {
+    waitUntil: "networkidle0",
+  });
+
+  // Evaluate the page content
+  const data = await page.evaluate(() => {
+    // Get the jobs section of the page
+    const list = document.querySelector("#search-results-page-1 > ol");
+    if (!list) return null;
+
+    // Get all job elements 
+    const listItems = list.querySelectorAll("li");
+    let jobs = [];
+
+    // Iterate through job items and extract relevant data
+    for (let i = 0; i < listItems.length; i++) {
+
+      const item = listItems[i];
+      const matchFound = item.innerText.match(/\b(server|bartender)\b/i);
+
+      if (matchFound) {
+
+        // Get the date and format it to one that will be used across DB
+        let unformatteDate = new Date(
+          item.querySelector(".meta span:nth-child(1)").title
+        );
+
+        // Annoying workaround because the names of restaurants aren't wrapped in a tag
+        let restaurantName = 'N/A'
+        let restaurantContainer = item.querySelector('.meta')
+        let counter = 0;
+
+        for (var j = 0; j < restaurantContainer.childNodes.length; j++) {
+          var node = restaurantContainer.childNodes[j];
+
+          // Check if the node is a text node
+          if (node.nodeType === Node.TEXT_NODE) {
+            counter++;
+            var text = node.textContent.trim();
+
+            // If there is a second text node, it's the restaurant's name
+            if (counter == 2) restaurantName = text;
+          }
+        }
+
+        const job = {
+          title: item.querySelector(".titlestring").textContent,
+          link: item.querySelector(".titlestring").href,
+          location: item.querySelector(".supertitle").innerText,
+          restaurant: restaurantName,
+          date: unformatteDate.toString(),
+        };
+
+        jobs.push(job);
+      }
+    }
+    return jobs;
+  });
+
+  // Close the headless browser
+  await browser.close();
+
+  return data;
+}
+
+module.exports = craigslist;
