@@ -1,11 +1,10 @@
 const puppeteer = require("puppeteer");
 
 async function craigslist() {
-  // Launch a headless browser using Puppeteer
+
   const browser = await puppeteer.launch({
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
-  // Create a new page in the headless browser
   const page = await browser.newPage();
 
   // Navigate to the target URL and wait until the network is idle
@@ -13,8 +12,8 @@ async function craigslist() {
     waitUntil: "networkidle0",
   });
 
-  // Evaluate the page content
   const data = await page.evaluate(() => {
+
     // Get the jobs section of the page
     const list = document.querySelector("#search-results-page-1 > ol");
     if (!list) return null;
@@ -27,7 +26,11 @@ async function craigslist() {
     for (let i = 0; i < listItems.length; i++) {
 
       const item = listItems[i];
-      const matchFound = item.innerText.match(/\b(server|bartender)\b/i);
+
+      // Check if the job title contains certain keywords and doesn't contain certain keywords
+      const contain = item.innerText.match(/\b(server|bartender)\b/i);
+      const dontContain = item.innerText.match(/\b(assistant)\b/i)
+      const matchFound = contain && !dontContain
 
       if (matchFound) {
 

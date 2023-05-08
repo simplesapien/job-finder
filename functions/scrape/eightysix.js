@@ -27,13 +27,20 @@ async function eightysix() {
     for (let i = 0; i < listItems.length; i++) {
 
       const item = listItems[i];
-      const jobTitle = item.querySelector(".job-title-headline").innerText;
-      const matchFound = jobTitle.match(/\b(server|bartender)\b/i);
+      const jobTitle = item.querySelector(".job-title-headline").textContent;
 
-      if (matchFound) {
+      // Check if the job title contains certain keywords and doesn't contain certain keywords
+      const contain = item.innerText.match(/\b(server|bartender)\b/i);
+      const dontContain = item.innerText.match(/\b(assistant)\b/i)
+      const matchFound = contain && !dontContain
 
-        const datePosted = item.querySelector('.job-posting-logo-wrapper > div > div:nth-child(2)').innerText
+      // Added in the second check because certain featured job postings don't have a date and it was crashing the program
+      let datePosted = item.querySelector('.job-posting-logo-wrapper > div > div:nth-child(2)')
+
+      if (matchFound && datePosted) {
+
         let unformatteDate = new Date();
+        datePosted = datePosted.textContent;
         const dateMatch = datePosted.match(/(\d+)\s*(minute|hour|day)s?/i);
 
         const unit = dateMatch[2]
@@ -65,7 +72,7 @@ async function eightysix() {
           title: jobTitle,
           link: item.href,
           location: address,
-          restaurant: item.querySelector(".bolded-company-name").innerText,
+          restaurant: item.querySelector(".bolded-company-name").textContent,
           date: unformatteDate.toString()
         };
 
