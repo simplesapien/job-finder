@@ -1,0 +1,97 @@
+/* Job modal */
+.modal {
+    visibility: hidden;
+    background: white;
+    width: min(600px, 60vw);
+    height: min(500px, 60vh);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    border: var(--border);
+    border-radius: var(--border-radius);
+    z-index: 3;
+    padding: 8%;
+    text-align: center;
+    overflow-y: auto;
+    box-shadow: var(--shadow);
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+.modal-close {
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    right: 0;
+    margin: 10px;
+    padding: 10px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: black;
+}
+
+.modal-close:hover {
+    cursor: pointer;
+}
+
+.modal-image-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-bottom: 10px;
+    width: 100%;
+    height: clamp(80px, 40%, 180px);
+    gap: 10px;
+}
+
+.modal-image-container > a {
+    border-radius: var(--border-radius);
+    background: rgb(218, 218, 218);
+    height: 100%;
+    width: 100%;
+}
+
+.modal-image-container > a > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.modal-rating {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 0.8rem;
+}
+
+.modal-stars > img {
+    width: 15px;
+    height: 15px;
+    margin-top: 2px;
+}
+
+.modal-stars {
+    margin: 0 10px 0 10px;
+}
+
+.modal-text {
+    width: 100%;
+}
+
+.overlay {
+    background: black;
+    visibility: hidden;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    opacity: 0.5;
+    z-index: 2;
+    transition: var(--hover-transition);
+}

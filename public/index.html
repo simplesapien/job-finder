@@ -3,14 +3,37 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta name="description" content="A selection of bartending and serving jobs in Vancouver, BC">
+  <meta name="keywords" content="Job Finder, Vancouver Jobs, Vancouver Serving Jobs, Vancouver Bar Jobs, Vancouver Bartending, Vancouver Bartending jobs, Vancouver Hospitality Jobs, Vancouver Hospitality, Hospitality Job Board Vancouver">
+  <meta name="author" content="http://www.kevan.codes">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>job finder</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="index.js"></script>
+  <title>Find hospitality jobs in Vancouver!</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="icon" href="assets/mountain.png" type="image/x-icon">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap');
+  </style>    
 </head>
 
 <body>
-</body>
 
+  <div class="jobs-container"></div>
+   
+  <div class="modal">
+    <div class="modal-close">X</div>
+    <h2 class="modal-title"></h2>
+    <div class="modal-rating"></div>
+    <div class="modal-image-container"></div>
+    <p class="modal-text"></p>
+  </div>
+
+  <div class="loader-container">
+    <span class="loader" alt="Animation courtesy -> https://cssloaders.github.io/"></span>
+  </div>
+
+  <div class="overlay"></div>
+  
+</body>
+<script src="scripts/index.js" type="module"></script>
 </html>
