@@ -19,7 +19,7 @@ async function findDescription(browser, url) {
 async function craigslist() {
   try {
     const browser = await puppeteer.launch({
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      headless: 'new'
     });
     const page = await browser.newPage();
 
@@ -28,6 +28,9 @@ async function craigslist() {
       waitUntil: "networkidle0",
       timeout: 60000,
     });
+
+    console.log('hey')
+
 
     const data = await page.evaluate(() => {
       // Get the jobs section of the page
@@ -98,5 +101,7 @@ async function craigslist() {
     console.log(err);
   }
 }
+
+craigslist();
 
 module.exports = craigslist;

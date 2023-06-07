@@ -1,54 +1,42 @@
-:root {
-    --yellow: rgb(255, 199, 0);
-    --purple: rgb(199, 185, 255);
-    --green: rgb(15, 169, 88);
-    --color1: #f96d37;
-    --color2: #8354e3;
-    --color3: #5eba75;
-    --rich-purple: #6e61ff;
-    --border: 3px solid rgb(0, 0, 0);
-    --shadow: 6px 6px 0px 0px rgba(0,0,0,0.9);
-    --hover-transition: 0.2s ease-in-out;
-    --load-transition: 0.5s ease-in-out;
-    --border-radius: 10px;
-}
-
 /* Job card */
 .job {
     position: relative;
     margin: 10px 0 10px 0;
-    padding: 20px;
-    background-color: var(--color3);
+    padding: 20px 20px 10px 20px;
+    background-color: #fffcf6;
     border: var(--border);
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
     width: min(80%, 500px);
-    z-index: 1;
+    z-index: 2;
     animation: fadeIn var(--load-transition);
-}
-
-.job:hover {
-    cursor: pointer;
-    transition: var(--hover-transition);
-    box-shadow: none;
-    border: 1px solid black;
 }
 
 .job-date {
     font-size: 0.7rem;
+    padding: 0;
+    margin: 0;
 }
 
 .job-title {
+    font-size: 2.2rem;
     font-weight: 700;
 }
 
+.job-company,
+.job-location {
+    font-size: 1.1rem;
+    font-weight: 400;
+}
+
 .button {
-    background: var(--color2);
-    padding: 15px;
-    margin: 10px 10px 0 0;
+    background: var(--button1);
+    padding: 12px 20px 12px 20px;
+    margin: 15px 15px 0 0;
     border-radius: var(--border-radius);
-    font-weight: 500;
-    color: white;
+    border: var(--border);
+    font-weight: 700;
+    color: black;
     box-shadow: var(--shadow);
     margin-bottom: 10px;
     float: left;
@@ -59,6 +47,24 @@
     box-shadow: none;
     transition: var(--hover-transition);
 }
+
+/* .job>a>div {
+    background: var(--button2);
+} */
+
+/* .job:nth-child(3n + 1) {
+    background: var(--color1);
+}
+
+.job:nth-child(3n + 2) {
+    background: var(--color2);
+}
+
+.job:nth-child(3n + 3) {
+    background: var(--color3);
+} */
+
+/* Fade in animations */
 
 .fadeIn {
     animation: fadeIn var(--load-transition);
@@ -75,6 +81,7 @@
         transform: translateY(-30px);
         opacity: 0;
     }
+
     100% {
         transform: translateY(0px);
         opacity: 1;
@@ -86,6 +93,7 @@
         transform: translateY(0px);
         opacity: 1;
     }
+
     100% {
         transform: translateY(-30px);
         opacity: 0;

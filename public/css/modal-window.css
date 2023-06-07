@@ -2,8 +2,8 @@
 .modal {
     visibility: hidden;
     background: white;
-    width: min(600px, 60vw);
-    height: min(500px, 60vh);
+    width: clamp(300px, 33vw, 600px);
+    height: clamp(250px, 80vh, 500px);
     position: fixed;
     top: 50%;
     left: 50%;
@@ -12,10 +12,12 @@
     border: var(--border);
     border-radius: var(--border-radius);
     z-index: 3;
-    padding: 8%;
+    padding: 2%;
     text-align: center;
     overflow-y: auto;
     box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
 }
 
 .modal-title {
@@ -50,14 +52,14 @@
     gap: 10px;
 }
 
-.modal-image-container > a {
+.modal-image-container>a {
     border-radius: var(--border-radius);
     background: rgb(218, 218, 218);
     height: 100%;
     width: 100%;
 }
 
-.modal-image-container > a > img {
+.modal-image-container>a>img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -71,7 +73,7 @@
     font-size: 0.8rem;
 }
 
-.modal-stars > img {
+.modal-stars>img {
     width: 15px;
     height: 15px;
     margin-top: 2px;
@@ -91,7 +93,13 @@
     width: 100vw;
     height: 100vh;
     position: fixed;
-    opacity: 0.5;
     z-index: 2;
-    transition: var(--hover-transition);
+    transition: 0.1s ease-in-out;
+}
+
+@media (max-width: 600px) {
+    .modal {
+        width: 80%;
+        height: 80%;
+    }
 }

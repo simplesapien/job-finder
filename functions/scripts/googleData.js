@@ -1,6 +1,4 @@
 const axios = require("axios");
-const dotenv = require("dotenv");
-dotenv.config();
 
 // Use the restaurant string to find the place_id of the restaurant
 async function getPlaceIdByName(name) {
@@ -10,9 +8,11 @@ async function getPlaceIdByName(name) {
         name
       )}&inputtype=textquery&fields=place_id&key=${process.env.GOOGLE_API_KEY}`
     );
+    if (response.data.candidates.length === 0) throw new Error(`No place found with the name: ${name}`);
     return response.data.candidates[0].place_id;
   } catch (error) {
-    console.log("Error:", error.message);
+    console.error(`Error occurred when getting the Place ID by name: ${error.message}`);
+    throw error;
   }
 }
 
@@ -24,7 +24,8 @@ async function getBusinessDetails(placeId) {
     );
     return response.data.result;
   } catch (error) {
-    console.log("Error:", error.message);
+    console.error(`Error occurred when getting business details: ${error.message}`);
+    throw error;
   }
 }
 
@@ -60,12 +61,12 @@ async function googleData(place) {
         imgrefs["large"] = response2.headers.location;
         obj.photos.push(imgrefs);
       } catch (error) {
-        console.log("Error:", error.message);
+        console.error(`Error occurred when fetching photos: ${error.message}`);
       }
     }
     return obj;
   } catch (error) {
-    console.log("Error:", error.message);
+    throw error;
   }
 }
 

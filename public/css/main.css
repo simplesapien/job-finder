@@ -9,15 +9,23 @@
 
 :root {
     --font: 'Space Grotesk', sans-serif;
+    --background: #fdefdb;
+    --button1: #ff6f97;
+    --button2: #f6134d;
+    --border: 3px solid rgb(0, 0, 0);
+    --shadow: 4px 4px 0px 0px black;
+    --hover-transition: 0.2s ease-in-out;
+    --load-transition: 0.5s ease-in-out;
+    --border-radius: 10px;
 }
 
 body {
     display: grid;
     font-family: var(--font);
-    background-color: #e5e5f7;
-    background-image:  radial-gradient(#040404 0.5px, transparent 0.5px), radial-gradient(#040404 0.5px, #e5e5f7 0.5px);
+    background-color: var(--background);
+    background-image: radial-gradient(#040404 0.5px, transparent 0.5px), radial-gradient(#040404 0.5px, var(--background) 0.5px);
     background-size: 20px 20px;
-    background-position: 0 0,10px 10px;
+    background-position: 0 0, 10px 10px;
     user-select: none;
     width: 100vw;
     height: 100vh;
@@ -32,7 +40,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 100%;    
+    width: 100%;
 }
 
 a {
