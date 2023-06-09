@@ -4,7 +4,7 @@ const puppeteer = require("puppeteer");
 async function findDescription(browser, url) {
   const newPage = await browser.newPage();
   await newPage.goto(url, {
-    waitUntil: "networkidle0",
+    waitUntil: "networkidle2",
     timeout: 60000,
   });
 
@@ -19,18 +19,16 @@ async function findDescription(browser, url) {
 async function craigslist() {
   try {
     const browser = await puppeteer.launch({
-      headless: 'new'
+      headless: 'new',
+      args: ["--no-sandbox", "--disable-setuid-sandbox"]
     });
     const page = await browser.newPage();
 
     // Navigate to the target URL and wait until the page loads
     await page.goto("https://vancouver.craigslist.org/search/fbh", {
-      waitUntil: "networkidle0",
+      waitUntil: "networkidle2",
       timeout: 60000,
     });
-
-    console.log('hey')
-
 
     const data = await page.evaluate(() => {
       // Get the jobs section of the page
@@ -101,7 +99,5 @@ async function craigslist() {
     console.log(err);
   }
 }
-
-craigslist();
 
 module.exports = craigslist;

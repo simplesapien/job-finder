@@ -4,8 +4,7 @@ const admin = require("firebase-admin");
 const cors = require("cors");
 
 // Import scripts
-const craigslist = require("./scripts/scrape/craigslist");
-const eightysix = require("./scripts/scrape/eightysix");
+const scrape = require("./scripts/webscraping/scrape");
 const gptCheck = require("./scripts/gptCheck");
 
 // Import data script for Places API
@@ -25,22 +24,11 @@ const db = admin.database();
 // Export a Firebase Function with increased memory
 exports.scrapeJobs = functions
   .runWith({ memory: "4GB", timeoutSeconds: 300 })
-  .pubsub.schedule("every 10 minutes")
+  .pubsub.schedule("every 24 hours")
   .onRun(async (context) => {
     try {
-      // Scrape job postings, combine them into a single array
-      let website1, website2;
-      try {
-        website1 = await craigslist();
-      } catch (error) {
-        throw new Error(`Error while scraping Craigslist: ${error.message}`);
-      }
-      try {
-        website2 = await eightysix();
-      } catch (error) {
-        throw new Error(`Error while scraping 86network: ${error.message}`);
-      }
-      const data = [...website1, ...website2];
+      // Scrape job postings 
+      const data = await scrape();
 
       const snapshot = await db.ref("jobs").get();
       snapshot.forEach((el) => {
@@ -96,11 +84,22 @@ exports.scrapeJobs = functions
         }
       }
 
+      // Log the number of jobs scraped (for debugging purposes)
+      let sizeOfData = data.length;
+      console.log(`Scraped ${sizeOfData} jobs`);
+
+      // Log the job posts (for debugging purposes)
+      for (let i = 0; i < sizeOfData; i++) {
+        console.log(`Job #${i + 1} -> ${data[i].link}`);
+      }
+
       // Add the extracted data to the Firebase Realtime Database
       const promises = data.map((job) => {
         return db.ref("jobs").push(job);
       });
       await Promise.all(promises);
+
+      return null;
 
     } catch (error) {
       console.error("Error:", error);
