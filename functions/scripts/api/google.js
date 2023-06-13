@@ -8,11 +8,9 @@ async function getPlaceIdByName(name) {
         name
       )}&inputtype=textquery&fields=place_id&key=${process.env.GOOGLE_API_KEY}`
     );
-    if (response.data.candidates.length === 0) throw new Error(`No place found with the name: ${name}`);
     return response.data.candidates[0].place_id;
   } catch (error) {
-    console.error(`Error occurred when getting the Place ID by name: ${error.message}`);
-    throw error;
+    console.error(`Error occurred when getting the Place ID by name: ${name}`);
   }
 }
 

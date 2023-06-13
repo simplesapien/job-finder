@@ -5,99 +5,65 @@ const cors = require("cors");
 
 // Import scripts
 const scrape = require("./scripts/webscraping/scrape");
-const gptCheck = require("./scripts/gptCheck");
+const cleanDB = require("./scripts/cleanDB");
+const getPlacesData = require("./scripts/getPlacesData");
+const checkForRestaurantName = require("./scripts/findRestaurantName");
+const findRestaurantName = require("./scripts/findRestaurantName");
 
-// Import data script for Places API
-const googleData = require("./scripts/googleData");
+// Initialize the Firebase App + DB + CORS Middleware for retrieveData function
+admin.initializeApp();
+const db = admin.database();
 
-// Conifgure CORS middleware
+// CORS middleware
 const corsOptions = {
   origin: ["https://job-finder-kh.web.app", "https://job-finder-kh.web.app/"],
   optionsSuccessStatus: 200,
 };
-const corsMiddleware = cors(corsOptions);
 
-// Initialize the Firebase App + DB
-admin.initializeApp();
-const db = admin.database();
+const corsMiddleware = cors(corsOptions);
 
 // Export a Firebase Function with increased memory
 exports.scrapeJobs = functions
   .runWith({ memory: "4GB", timeoutSeconds: 300 })
-  .pubsub.schedule("every 24 hours")
+  .pubsub.schedule("every 10 minutes")
   .onRun(async (context) => {
     try {
-      // Scrape job postings 
-      const data = await scrape();
 
+      let data = await scrape();
+
+      // Connect to DB + loop through each entry
       const snapshot = await db.ref("jobs").get();
       snapshot.forEach((el) => {
         const entry = el.val();
 
         // If any entries in the db are over a month old, delete them
-        const today = new Date();
-        const date = new Date(entry.date);
-        const diffTime = Math.abs(today - date);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        if (diffDays > 30) {
-          db.ref("jobs").child(el.key).remove();
-        }
+        cleanDB(entry, db, el);
 
-        // If data already exists in the db, remove it from the array and continue
+        // If jobs data already exists in the db, remove it from the array and continue
         data.forEach((job, index) => {
-          if (
-            job.restaurant == entry.restaurant &&
-            job.title == entry.title &&
-            job.location == entry.location
-          ) {
+          if (job.description.normalize() === entry.description.normalize()) {
             data.splice(index, 1);
           }
         });
       });
 
-      // If the restaurant name is missing, pass the description to the OpenAI API to get the restaurant name
-      for (let i = 0; i < data.length; i++) {
-        if (data[i].restaurant == "N/A") {
-          try {
-            const restaurant = await gptCheck(data[i].description, data[i].title);
-            if (restaurant) data[i].restaurant = restaurant;
-          } catch (error) {
-            console.error(`Error while fetching restaurant name from OpenAI for job title: ${data[i].title}, description: ${data[i].description}`, error);
-          }
-        }
-      }
+      // Checks for missing restaurant name, fills it in if it can be found in the job description
+      data = await findRestaurantName(data);
 
       // If googleData returns an error, log it, but continue with the rest of the data
-      for (let i = 0; i < data.length; i++) {
-        if (data[i].restaurant != "N/A") {
-          const place = `${data[i].restaurant} Vancouver`;
-          try {
-            let placeData = await googleData(place);
-            if (placeData) {
-              data[i].rating = placeData.rating;
-              data[i].reviews = placeData.reviews;
-              data[i].photos = placeData.photos;
-            }
-          } catch (error) {
-            console.error(`Error while fetching Google Places data for place: ${place}, job: ${JSON.stringify(data[i])}`, error);
-          }
-        }
-      }
+      data = await getPlacesData(data);
 
-      // Log the number of jobs scraped (for debugging purposes)
-      let sizeOfData = data.length;
-      console.log(`Scraped ${sizeOfData} jobs`);
-
-      // Log the job posts (for debugging purposes)
-      for (let i = 0; i < sizeOfData; i++) {
-        console.log(`Job #${i + 1} -> ${data[i].link}`);
-      }
-
-      // Add the extracted data to the Firebase Realtime Database
+      // Add the data to the DB, package as a single promise for efficiency
       const promises = data.map((job) => {
         return db.ref("jobs").push(job);
       });
       await Promise.all(promises);
+
+      // Log the number of jobs scraped + job posts for debugging
+      console.log(`Scraped ${data.length} jobs`);
+      for (let i = 0; i < data.length; i++) {
+        console.log(`Job #${i + 1} -> ${data[i].link}`);
+      }
 
       return null;
 
@@ -106,6 +72,8 @@ exports.scrapeJobs = functions
     }
   });
 
+
+// HTTP Req Firebase Function that returns all jobs in the DB
 exports.retrieveData = functions.https.onRequest((req, res) => {
   corsMiddleware(req, res, async () => {
     const jobs = [];

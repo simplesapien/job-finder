@@ -23,17 +23,32 @@ const example = [
         content: 'N/A'
     }];
 
-async function gptCheck(description, jobTitle) {
+async function gpt(description, jobTitle, retries) {
     try {
         const completion = await openaiInstance.createChatCompletion({
             model: "gpt-3.5-turbo",
             messages: [...example, { role: "user", content: description }],
             max_tokens: 2000,
         });
-        return completion.data.choices[0].message.content;
+
+        // Add a check to ensure that the API call was successful
+        if (completion) {
+            console.log(`The GPT API call for ${jobTitle} was successful!`);
+            return completion.data.choices[0].message.content
+        }
+
+        // If the API call was unsuccessful, retry up to 3 times
+        if (retries > 0) {
+            console.log(`The GPT API call for ${jobTitle} was unsuccessful. Retrying...`)
+            await gpt(description, jobTitle, retries - 1);
+        }
+
     } catch (err) {
-        console.log(`Error while fetching restaurant name from OpenAI for job title: ${jobTitle}, description: ${description}`, err);
+        console.log(`Error while fetching restaurant name from OpenAI for job title: ${jobTitle}`);
+
+        if (err.response.data.error.code) console.log(`Error message: ${err.response.data.error.code}`);
+        else console.log(err);
     }
 }
 
-module.exports = gptCheck;
+module.exports = gpt;
