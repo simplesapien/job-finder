@@ -19,8 +19,8 @@ async function findDescription(browser, url) {
 async function craigslist() {
   try {
     const browser = await puppeteer.launch({
-      headless: 'new',
-      args: ["--no-sandbox", "--disable-setuid-sandbox"]
+      headless: "new",
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
     const page = await browser.newPage();
 
@@ -35,7 +35,6 @@ async function craigslist() {
       const list = document.querySelector("#search-results-page-1 > ol");
       if (!list) return null;
 
-      console.log(list);
       // Get all job elements
       const listItems = list.querySelectorAll("li");
       let jobs = [];
@@ -75,8 +74,8 @@ async function craigslist() {
           }
 
           const job = {
-            title: item.querySelector(".titlestring").textContent,
-            link: item.querySelector(".titlestring").href,
+            title: item.querySelector(".posting-title").textContent,
+            link: item.querySelector(".posting-title").href,
             location: item.querySelector(".supertitle").innerText,
             restaurant: restaurantName,
             date: unformatteDate.toString(),
@@ -99,5 +98,12 @@ async function craigslist() {
     console.log(err);
   }
 }
+
+async function test() {
+  let pp = await craigslist();
+  console.log(pp);
+}
+
+test();
 
 module.exports = craigslist;
