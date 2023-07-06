@@ -7,7 +7,6 @@ const cors = require("cors");
 const scrape = require("./scripts/webscraping/scrape");
 const cleanDB = require("./scripts/cleanDB");
 const getPlacesData = require("./scripts/getPlacesData");
-const checkForRestaurantName = require("./scripts/findRestaurantName");
 const findRestaurantName = require("./scripts/findRestaurantName");
 
 // Initialize the Firebase App + DB + CORS Middleware for retrieveData function
@@ -28,7 +27,6 @@ exports.scrapeJobs = functions
   .pubsub.schedule("every 10 minutes")
   .onRun(async (context) => {
     try {
-
       let data = await scrape();
 
       // Connect to DB + loop through each entry
@@ -66,12 +64,10 @@ exports.scrapeJobs = functions
       }
 
       return null;
-
     } catch (error) {
       console.error("Error:", error);
     }
   });
-
 
 // HTTP Req Firebase Function that returns all jobs in the DB
 exports.retrieveData = functions.https.onRequest((req, res) => {

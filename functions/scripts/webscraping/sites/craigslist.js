@@ -99,11 +99,4 @@ async function craigslist() {
   }
 }
 
-async function test() {
-  let pp = await craigslist();
-  console.log(pp);
-}
-
-test();
-
 module.exports = craigslist;
