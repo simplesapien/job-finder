@@ -30,7 +30,7 @@ export function addData(entry) {
   // Check to see whether the db has the info we need from it's Places API call
   if (entry.rating) {
 
-    modal.rating.innerText = Math.floor(entry.rating);
+    modal.rating.innerText = entry.rating
 
     // Add reviews
     let reviews = document.createElement("p");
@@ -42,7 +42,14 @@ export function addData(entry) {
     starsContainer.classList.add("modal-stars");
 
     // Add num of stars
-    for (let i = 0; i < modal.rating.innerText; i++) {
+    for (let i = 0; i < Math.floor(entry.rating); i++) {
+      let star = document.createElement("img");
+      star.src = "../assets/star.png";
+      starsContainer.appendChild(star);
+    }
+
+    // If the star rating is 4.5 or higher, add a half-star
+    if (entry.rating >= 4.5) {
       let star = document.createElement("img");
       star.src = "../assets/halfstar.png";
       starsContainer.appendChild(star);
@@ -77,6 +84,7 @@ export function addData(entry) {
 }
 
 export function removeData() {
+
   // Hide overlay
   overlay.style.opacity = "0";
   overlay.style.visibility = "hidden";

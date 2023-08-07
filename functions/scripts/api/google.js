@@ -22,9 +22,7 @@ async function getBusinessDetails(placeId) {
     );
     return response.data.result;
   } catch (error) {
-    console.error(
-      `Error occurred when getting business details: ${error.message}`
-    );
+    console.error(`Error occurred when getting business details: ${error.message}`);
     throw error;
   }
 }
