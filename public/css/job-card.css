@@ -48,9 +48,12 @@
     transition: var(--hover-transition);
 }
 
-.job-description,
-.job-link {
-    display: flex;
+/* .job>a>div {
+    background: var(--button2);
+} */
+
+/* .job:nth-child(3n + 1) {
+    background: var(--color1);
 }
 
 .job img {

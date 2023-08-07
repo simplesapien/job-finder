@@ -64,12 +64,10 @@ exports.scrapeJobs = functions
       }
 
       return null;
-
     } catch (error) {
       console.error("Error:", error);
     }
   });
-
 
 // HTTP Req Firebase Function that returns all jobs in the DB
 exports.retrieveData = functions.https.onRequest((req, res) => {

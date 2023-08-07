@@ -1,8 +1,8 @@
 import { dayString, monthString } from "./date.js";
 import { addData, removeData } from "./modal.js";
+// import { disableScrolling, enableScrolling } from "./scroll.js";
 
 const loader = document.querySelector(".loader-container");
-const modalContainer = document.querySelector(".modal");
 const modalClose = document.querySelector(".modal-close");
 const jobsContainer = document.querySelector(".jobs-container");
 
@@ -56,20 +56,26 @@ async function fetchData() {
 
         // Send modal obj to modal.js when the modal is either opened or closed. Enable/disable scroll if modal is closed/open.
         let jobButton = job.querySelector(".job-description");
-        jobButton.addEventListener("click", () => addData(entry));
-        modalClose.addEventListener("click", () => removeData());
+
+        jobButton.addEventListener("click", () => {
+          addData(entry);
+        });
+
+        modalClose.addEventListener("click", () => {
+          removeData();
+        });
       });
 
       // Hide the preloader once everything is loaded
-      loader.classList.remove('fadeIn');
-      loader.classList.add('fadeOut');
+      loader.classList.remove("fadeIn");
+      loader.classList.add("fadeOut");
     } else {
       console.error("Failed to fetch and parse jobs");
     }
   } catch (error) {
     console.log("Error fetching data:" + error);
-    loader.classList.remove('fadeIn');
-    loader.classList.add('fadeOut');
+    loader.classList.remove("fadeIn");
+    loader.classList.add("fadeOut");
   }
 }
 
