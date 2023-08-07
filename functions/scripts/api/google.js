@@ -33,8 +33,8 @@ async function googleData(place) {
     let placeId = await getPlaceIdByName(place);
     let businessDetails = await getBusinessDetails(placeId);
     let obj = {};
-    obj.rating = businessDetails.rating;
-    obj.reviews = businessDetails.user_ratings_total;
+    obj.rating = businessDetails.rating || "N/A";
+    obj.reviews = businessDetails.user_ratings_total || 0;
     obj.photos = [];
 
     // Added this step to get the photo references, then use them to get the actual photos without the API key present in the URL

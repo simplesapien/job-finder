@@ -44,9 +44,9 @@ async function fetchData() {
           <h1 class="job-title">${entry.title}</h1>
           <p class="job-company">${entry.restaurant}</p>
           <p class="job-location">${entry.location}</p>
-          <div class="job-description button">Job description</div>     
+          <div class="job-description button">Info <img src='assets/info.svg'></div>     
           <a href="${entry.link}" target="_blank">
-            <div class="job-link button">Apply</div>
+            <div class="job-link button">Apply <img src='assets/arrow.svg'></div>
           </a>
         `;
 
@@ -54,7 +54,7 @@ async function fetchData() {
         job.innerHTML = body;
         jobsContainer.appendChild(job);
 
-        // Send modal obj to modal.js when the modal is either opened or closed
+        // Send modal obj to modal.js when the modal is either opened or closed. Enable/disable scroll if modal is closed/open.
         let jobButton = job.querySelector(".job-description");
         jobButton.addEventListener("click", () => addData(entry));
         modalClose.addEventListener("click", () => removeData());

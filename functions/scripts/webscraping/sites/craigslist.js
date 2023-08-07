@@ -75,8 +75,8 @@ async function craigslist() {
           }
 
           const job = {
-            title: item.querySelector(".titlestring").textContent,
-            link: item.querySelector(".titlestring").href,
+            title: item.querySelector(".posting-title").innerText,
+            link: item.querySelector(".posting-title").href,
             location: item.querySelector(".supertitle").innerText,
             restaurant: restaurantName,
             date: unformatteDate.toString(),

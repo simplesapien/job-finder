@@ -7,7 +7,6 @@ const cors = require("cors");
 const scrape = require("./scripts/webscraping/scrape");
 const cleanDB = require("./scripts/cleanDB");
 const getPlacesData = require("./scripts/getPlacesData");
-const checkForRestaurantName = require("./scripts/findRestaurantName");
 const findRestaurantName = require("./scripts/findRestaurantName");
 
 // Initialize the Firebase App + DB + CORS Middleware for retrieveData function
@@ -25,10 +24,9 @@ const corsMiddleware = cors(corsOptions);
 // Export a Firebase Function with increased memory
 exports.scrapeJobs = functions
   .runWith({ memory: "4GB", timeoutSeconds: 300 })
-  .pubsub.schedule("every 10 minutes")
+  .pubsub.schedule("every 240 minutes")
   .onRun(async (context) => {
     try {
-
       let data = await scrape();
 
       // Connect to DB + loop through each entry
