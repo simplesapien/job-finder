@@ -1,6 +1,6 @@
 # Vancouver Serving & Bartending Job Finder
 
-![Project Screenshot](url-to-a-screenshot-of-your-app)
+![Project Screenshot](https://github.com/simplesapien/job-finder/blob/main/screenshot.png?raw=true)
 
 This application is a specialized job finder tailored for serving and bartending jobs in Vancouver. The primary goal of this project was to provide a niche solution for the local job market, making it easier for individuals to find relevant job opportunities.
 
