@@ -1,4 +1,5 @@
-const puppeteer = require("puppeteer");
+const puppeteer = require("puppeteer-core");
+const chromium = require("@sparticuz/chromium");
 
 // Function to find the description of a job posting
 async function findDescription(browser, url) {
@@ -21,8 +22,10 @@ async function craigslist() {
   try {
     console.log("🌐 Craigslist scraper: Launching browser...");
     const browser = await puppeteer.launch({
-      headless: 'new',
-      args: ["--no-sandbox", "--disable-setuid-sandbox"]
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath(),
+      headless: chromium.headless,
     });
     const page = await browser.newPage();
 
